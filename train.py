@@ -54,11 +54,11 @@ def train_model(data_path, save_dir, time_steps=12):
                  batch_size=32,
                  callbacks=[EarlyStopping(patience=10)])
 
-    # Get the best hyperparameters and build the best model
+    # Creating best model by getting best hyperparameters values
     best_hps = tuner.get_best_hyperparameters(num_trials=1)[0].values
     best_model = build_htc_lstm_attn_model((time_steps, X_train_seq.shape[2]), best_hps)
 
-    # Train the best model for overall data
+    # Trainining: The best model for overall data
     best_model.fit(X_train_seq, [y_train_seq_temp, y_train_seq_hum],
                    validation_data=(X_val_seq, [y_val_seq_temp, y_val_seq_hum]),
                    epochs=50,
@@ -66,7 +66,7 @@ def train_model(data_path, save_dir, time_steps=12):
                    callbacks=[EarlyStopping(patience=10)],
                    verbose=1)
 
-    # Save the best model for overall data
+    # Save: The best model for overall data
     overall_save_dir = os.path.join(save_dir, 'htc_lstm_attn', 'overall')
     os.makedirs(overall_save_dir, exist_ok=True)
     best_model.save(os.path.join(overall_save_dir, 'best_model_htc_lstm_attn_overall.h5'))
